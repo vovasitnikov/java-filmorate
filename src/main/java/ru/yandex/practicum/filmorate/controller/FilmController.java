@@ -7,29 +7,38 @@ import ru.yandex.practicum.filmorate.model.Film;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/films")
 @Slf4j
 public class FilmController {
 
-    private List<Film> films = new ArrayList<>();
+    public int idFilm;
+    private HashMap<Integer, Film> films = new HashMap<>();
 
     @GetMapping
     public List<Film> findAll() {
-        return films;
+        List<Film> filmList = new ArrayList<>();
+        for(Map.Entry<Integer, Film> user : films.entrySet()) {
+            filmList.add(user.getValue());
+        }
+        return filmList;
     }
 
     @PostMapping
     public Film create(@RequestBody Film film) throws ValidationException {
         checkFilm(film);
-        films.add(film);
+        film.setId(++idFilm);
+        films.put(idFilm, film);
         log.info("Получен запрос на создание нового фильма");
+        log.info("Фильм добавлен {}", film);
         return film;
     }
 
-    private void checkFilm(Film film) throws ValidationException {
+    private void checkFilm(Film film) {
         LocalDate bornCinema = LocalDate.of(1895, 12, 28);
         if (film.getId() == 0) film.setId(1);
         if (film.getName().equals("")) throw new ValidationException();
@@ -40,19 +49,14 @@ public class FilmController {
     }
 
     @PutMapping
-    public Film update(@RequestBody Film film) throws ValidationException {
-        //if (films.size() == 0)  throw new ValidationException(); //когда список пуст
-        for (int i = 0; i < films.size(); i++) {
-            int id = films.get(i).getId();
-            int idNew = film.getId();
-            if (id == idNew) {
-                checkFilm(film);
-                films.remove(i);
-                films.add(film);
-                log.info("Получен запрос на редактирование фильма");
-                return film;
-            }
-        }
-        throw new ValidationException();
+    public Film update(@RequestBody Film film) {
+        if (films.size() == 0) throw new ValidationException(); //когда список пуст
+        int idNew = film.getId();
+        int id = films.get(idNew).getId();
+        checkFilm(film);
+        films.put(id, film);
+        log.info("Получен запрос на редактирование фильма");
+        log.info("Фильм отредактирован и добавлен {}", film);
+        return film;
     }
 }

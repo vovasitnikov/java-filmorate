@@ -7,7 +7,9 @@ import ru.yandex.practicum.filmorate.model.User;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/users")
@@ -15,24 +17,27 @@ import java.util.List;
 public class UserController {
     public int id;
 
-    private List<User> users = new ArrayList<>();
+    private HashMap<Integer, User> users = new HashMap<>();
 
     @GetMapping
     public List<User> findAll() {
-        return users;
+        List<User> userList = new ArrayList<>();
+        for(Map.Entry<Integer, User> user : users.entrySet()) {
+            userList.add(user.getValue());
+        }
+        return userList;
     }
 
     @PostMapping
-    public User create(@RequestBody User user) throws ValidationException {
+    public User create(@RequestBody User user) {
         checkUser(user);
-        id= id + 1;
-        user.setId(id);
-        users.add(user);
+        user.setId(++id);
+        users.put(id, user);
         log.info("Получен запрос на создание нового пользователя");
         return user;
     }
 
-    private void checkUser(User user) throws ValidationException {
+    private void checkUser(User user) {
         if (user.getId() < 0) throw new ValidationException();
         if (user.getEmail().equals("")) throw new ValidationException();
         if (!user.getEmail().contains("@")) throw new ValidationException();
@@ -47,19 +52,13 @@ public class UserController {
     }
 
     @PutMapping
-    public User update(@RequestBody User user) throws ValidationException {
-        if (users.size() == 0)  throw new ValidationException(); //когда список пуст
-        for (int i = 0; i < users.size(); i++) {
-            int id = users.get(i).getId();
-            int idNew = user.getId();
-            if (id == idNew) {
-                checkUser(user);
-                users.remove(i);
-                users.add(user);
-                log.info("Получен запрос на редактирование пользователя");
-                return user;
-            }
-        }
-        throw new ValidationException();
+    public User update(@RequestBody User user) {
+        if (users.size() == 0) throw new ValidationException(); //когда список пуст
+        int idNew = user.getId();
+        int id = users.get(idNew).getId();
+            checkUser(user);
+            users.put(id, user);
+            log.info("Получен запрос на редактирование пользователя");
+            return user;
     }
 }
