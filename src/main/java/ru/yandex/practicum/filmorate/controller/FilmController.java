@@ -41,22 +41,25 @@ public class FilmController {
     private void checkFilm(Film film) {
         LocalDate bornCinema = LocalDate.of(1895, 12, 28);
         if (film.getId() == 0) film.setId(1);
-        if (film.getName().equals("")) throw new ValidationException();
-        if (film.getDescription().length() > 200) throw new ValidationException();
-        if (film.getReleaseDate().isBefore(bornCinema)) throw new ValidationException();
-        if (film.getDuration() < 0) throw new ValidationException();
+        if (film.getName().equals("")) throw new ValidationException("Нет названия фильма");
+        if (film.getDescription().length() > 200) throw new ValidationException("Описание слишком длинное");
+        if (film.getReleaseDate() == null)  throw new ValidationException("Дата пустая");
+        if (film.getReleaseDate().isBefore(bornCinema)) throw new ValidationException("Дата выпуска слишком ранняя");
+        if (film.getDuration() < 0) throw new ValidationException("Продолжительность меньше нуля");
 
     }
 
     @PutMapping
     public Film update(@RequestBody Film film) {
-        if (films.size() == 0) throw new ValidationException(); //когда список пуст
         int idNew = film.getId();
-        int id = films.get(idNew).getId();
-        checkFilm(film);
-        films.put(id, film);
-        log.info("Получен запрос на редактирование фильма");
-        log.info("Фильм отредактирован и добавлен {}", film);
-        return film;
+        if(films.containsKey(idNew)) {
+            int id = films.get(idNew).getId();
+            checkFilm(film);
+            films.put(id, film);
+            log.info("Получен запрос на редактирование фильма");
+            log.info("Фильм отредактирован и добавлен {}", film);
+            return film;
+        }
+        throw new ValidationException("Такого фильма в базе нет");
     }
 }

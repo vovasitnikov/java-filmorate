@@ -22,7 +22,7 @@ public class UserController {
     @GetMapping
     public List<User> findAll() {
         List<User> userList = new ArrayList<>();
-        for(Map.Entry<Integer, User> user : users.entrySet()) {
+        for (Map.Entry<Integer, User> user : users.entrySet()) {
             userList.add(user.getValue());
         }
         return userList;
@@ -38,27 +38,30 @@ public class UserController {
     }
 
     private void checkUser(User user) {
-        if (user.getId() < 0) throw new ValidationException();
-        if (user.getEmail().equals("")) throw new ValidationException();
-        if (!user.getEmail().contains("@")) throw new ValidationException();
-        if (user.getLogin().equals("")) throw new ValidationException();
-        if (user.getLogin().contains(" ")) throw new ValidationException();
+        if (user.getId() < 0) throw new ValidationException("Id пользователя отрицательный");
+        if (user.getEmail().equals("")) throw new ValidationException("Почта пустая");
+        if (!user.getEmail().contains("@")) throw new ValidationException("Почта не верная");
+        if (user.getLogin().equals("")) throw new ValidationException("Логин пустой");
+        if (user.getLogin().contains(" ")) throw new ValidationException("Логин содержит пробелы");
         if (user.getName() == null) {
             user.setName(user.getLogin());
         }
+        if (user.getBirthday() == null)  throw new ValidationException("Дата пустая");
         if (user.getBirthday().isAfter(LocalDate.now())) {
-            throw new ValidationException();
+            throw new ValidationException("Дата рождения не верная");
         }
     }
 
     @PutMapping
     public User update(@RequestBody User user) {
-        if (users.size() == 0) throw new ValidationException(); //когда список пуст
         int idNew = user.getId();
-        int id = users.get(idNew).getId();
+        if (users.containsKey(idNew)) {
+            int id = users.get(idNew).getId();
             checkUser(user);
             users.put(id, user);
             log.info("Получен запрос на редактирование пользователя");
             return user;
+        }
+        throw new ValidationException("Пользователя нет в базе");
     }
 }
