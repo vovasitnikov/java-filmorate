@@ -9,7 +9,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+
 
 @RestController
 @RequestMapping("/films")
@@ -21,11 +21,7 @@ public class FilmController {
 
     @GetMapping
     public List<Film> findAll() {
-        List<Film> filmList = new ArrayList<>();
-        for(Map.Entry<Integer, Film> user : films.entrySet()) {
-            filmList.add(user.getValue());
-        }
-        return filmList;
+        return new ArrayList<>(films.values());
     }
 
     @PostMapping
@@ -40,12 +36,13 @@ public class FilmController {
 
     private void checkFilm(Film film) {
         LocalDate bornCinema = LocalDate.of(1895, 12, 28);
-        if (film.getId() == 0) film.setId(1);
         if (film.getName().equals("")) throw new ValidationException("Нет названия фильма");
+        if (film.getName() == null) throw new ValidationException("Название фильма null");
         if (film.getDescription().length() > 200) throw new ValidationException("Описание слишком длинное");
+        if (film.getDescription() == null) throw new ValidationException("Описание фильма null");
         if (film.getReleaseDate() == null)  throw new ValidationException("Дата пустая");
         if (film.getReleaseDate().isBefore(bornCinema)) throw new ValidationException("Дата выпуска слишком ранняя");
-        if (film.getDuration() < 0) throw new ValidationException("Продолжительность меньше нуля");
+        if (film.getDuration() <= 0) throw new ValidationException("Продолжительность меньше нуля");
 
     }
 
