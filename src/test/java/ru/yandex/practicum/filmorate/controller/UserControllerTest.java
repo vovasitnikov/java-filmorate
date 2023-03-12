@@ -88,19 +88,6 @@ class UserControllerTest {
     }
 
     @Test
-    void createLoginWithBlanks() {
-        try {
-            user.setLogin("vova s");
-            checkUser(user);
-        } catch (Exception e) {
-            assertEquals("Логин содержит пробелы",
-                    e.getMessage());
-            return;
-        }
-        fail("Тест провален");
-    }
-
-    @Test
     void createFailDate() {
         try {
             user.setBirthday(LocalDate.of(2985, 9, 12));
@@ -115,10 +102,9 @@ class UserControllerTest {
 
     private void checkUser(User user) {
         if (user.getId() < 0) throw new ValidationException("Id пользователя отрицательный");
-        if (user.getEmail().equals("")) throw new ValidationException("Почта пустая");
+        if (user.getEmail().isBlank()) throw new ValidationException("Почта пустая");
         if (!user.getEmail().contains("@")) throw new ValidationException("Почта не верная");
-        if (user.getLogin().equals("")) throw new ValidationException("Логин пустой");
-        if (user.getLogin().contains(" ")) throw new ValidationException("Логин содержит пробелы");
+        if (user.getLogin().isBlank()) throw new ValidationException("Логин пустой");
         if (user.getName() == null) {
             user.setName(user.getLogin());
         }

@@ -35,14 +35,13 @@ public class UserController {
 
     private void checkUser(User user) {
         if (!(user.getEmail() == null)) { //почта может быть null
-            if (user.getEmail().equals("")) throw new ValidationException("Почта пустая");
+            if (user.getEmail().isBlank()) throw new ValidationException("Почта пустая");
             if (!user.getEmail().contains("@")) throw new ValidationException("Почта не верная");
         }
         if (!(user.getLogin() == null)) {
-            if (user.getLogin().equals("")) throw new ValidationException("Логин пустой");
-            if (user.getLogin().contains(" ")) throw new ValidationException("Логин содержит пробелы");
+            if (user.getLogin().isBlank()) throw new ValidationException("Логин пустой");
         }
-        if (user.getName() == null || user.getName() == "") {
+        if (user.getName() == null || user.getName().isBlank()) {
             user.setName(user.getLogin());
         }
         if (user.getBirthday() == null)  throw new ValidationException("Дата пустая");

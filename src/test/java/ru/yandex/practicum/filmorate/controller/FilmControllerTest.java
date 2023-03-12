@@ -95,12 +95,11 @@ class FilmControllerTest {
     private void checkFilm(Film film) {
         LocalDate bornCinema = LocalDate.of(1895, 12, 28);
         if (film.getId() == 0) film.setId(1);
-        if (film.getName().equals("")) throw new ValidationException("Нет названия фильма");
+        if (film.getName().isBlank()) throw new ValidationException("Нет названия фильма");
         if (film.getDescription().length() > 200) throw new ValidationException("Описание слишком длинное");
         if (film.getReleaseDate() == null)  throw new ValidationException("Дата пустая");
         if (film.getReleaseDate().isBefore(bornCinema)) throw new ValidationException("Дата выпуска слишком ранняя");
         if (film.getDuration() < 0) throw new ValidationException("Продолжительность меньше нуля");
-
     }
 
     @Test

@@ -36,14 +36,13 @@ public class FilmController {
 
     private void checkFilm(Film film) {
         LocalDate bornCinema = LocalDate.of(1895, 12, 28);
-        if (film.getName().equals("")) throw new ValidationException("Нет названия фильма");
+        if (film.getName().isBlank()) throw new ValidationException("Нет названия фильма");
         if (film.getName() == null) throw new ValidationException("Название фильма null");
         if (film.getDescription().length() > 200) throw new ValidationException("Описание слишком длинное");
         if (film.getDescription() == null) throw new ValidationException("Описание фильма null");
         if (film.getReleaseDate() == null)  throw new ValidationException("Дата пустая");
         if (film.getReleaseDate().isBefore(bornCinema)) throw new ValidationException("Дата выпуска слишком ранняя");
         if (film.getDuration() <= 0) throw new ValidationException("Продолжительность меньше нуля");
-
     }
 
     @PutMapping
