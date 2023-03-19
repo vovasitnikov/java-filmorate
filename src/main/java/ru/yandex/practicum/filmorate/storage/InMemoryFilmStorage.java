@@ -1,37 +1,30 @@
 package ru.yandex.practicum.filmorate.storage;
 
-import lombok.extern.slf4j.Slf4j;
+import lombok.Data;
 import org.springframework.stereotype.Component;
-import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.model.User;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-
-@RestController
-@RequestMapping("/films")
-@Slf4j
+@Data
 @Component
 public class InMemoryFilmStorage implements FilmStorage{
     public int idFilm;
     private HashMap<Integer, Film> films = new HashMap<>();
 
-    @GetMapping
     public List<Film> findAll() {
         return new ArrayList<>(films.values());
     }
 
-    @PostMapping
-    public Film create(@RequestBody Film film) throws ValidationException {
+    public Film create(Film film) throws ValidationException {
         checkFilm(film);
         film.setId(++idFilm);
         films.put(idFilm, film);
-        log.info("Получен запрос на создание нового фильма");
-        log.info("Фильм добавлен {}", film);
         return film;
     }
 
@@ -46,17 +39,22 @@ public class InMemoryFilmStorage implements FilmStorage{
         if (film.getDuration() <= 0) throw new ValidationException("Продолжительность меньше нуля");
     }
 
-    @PutMapping
-    public Film update(@RequestBody Film film) {
+    public Film findFilmById(int id) {
+        if (films.containsKey(id)) {
+            return films.get(id);
+        }
+        return null;
+    }
+
+    public Film update(Film film) {
         int idNew = film.getId();
         if(films.containsKey(idNew)) {
             int id = films.get(idNew).getId();
             checkFilm(film);
             films.put(id, film);
-            log.info("Получен запрос на редактирование фильма");
-            log.info("Фильм отредактирован и добавлен {}", film);
             return film;
         }
         throw new ValidationException("Такого фильма в базе нет");
     }
 }
+

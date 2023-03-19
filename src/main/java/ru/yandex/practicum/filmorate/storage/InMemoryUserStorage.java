@@ -1,8 +1,8 @@
 package ru.yandex.practicum.filmorate.storage;
 
-import lombok.extern.slf4j.Slf4j;
+import lombok.Data;
 import org.springframework.stereotype.Component;
-import org.springframework.web.bind.annotation.*;
+import ru.yandex.practicum.filmorate.exception.UserNotFoundException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
 
@@ -11,27 +11,21 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-
-@RestController
-@RequestMapping("/users")
-@Slf4j
+@Data
 @Component
 public class InMemoryUserStorage implements UserStorage{
-    public int id;
 
+    public int id;
     private HashMap<Integer, User> users = new HashMap<>();
 
-    @GetMapping
     public List<User> findAll() {
         return new ArrayList<>(users.values());
     }
 
-    @PostMapping
-    public User create(@RequestBody User user) {
+    public User create(User user) {
         checkUser(user);
         user.setId(++id);
         users.put(id, user);
-        log.info("Получен запрос на создание нового пользователя");
         return user;
     }
 
@@ -52,14 +46,19 @@ public class InMemoryUserStorage implements UserStorage{
         }
     }
 
-    @PutMapping
-    public User update(@RequestBody User user) {
+    public User findUserById(int id) {
+        if (users.containsKey(id)) {
+            return users.get(id);
+        }
+         throw new UserNotFoundException("Пользователя не существует");
+    }
+
+    public User update(User user) {
         int idNew = user.getId();
         if (users.containsKey(idNew)) {
             int id = users.get(idNew).getId();
             checkUser(user);
             users.put(id, user);
-            log.info("Получен запрос на редактирование пользователя");
             return user;
         }
         throw new ValidationException("Пользователя нет в базе");

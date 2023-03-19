@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import java.time.LocalDate;
+import java.util.Set;
 
 @Data
 @AllArgsConstructor
@@ -13,4 +14,5 @@ public class User {
     String login;
     String name;
     LocalDate birthday;
+    Set<Long> idFriends;
 }
