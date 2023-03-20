@@ -34,10 +34,9 @@ public class FilmController {
         return Optional.ofNullable(filmService.findFilmById(id));
     }
 
-    //GET /films/popular?count={count}
     //возвращает список из первых count фильмов по количеству лайков. Если значение параметра count не задано, верните первые 10.
     @GetMapping("/popular?count={count}")
-    public Set<Long> findPopularFilms(@PathVariable int count) {
+    public Set<Film> findPopularFilms(@PathVariable int count) {
         return filmService.findPopularFilms(count);
     }
 

@@ -38,8 +38,8 @@ public class UserController {
     }
 
     @GetMapping("/{id}/friends/common/{otherId}")  //список друзей, общих с другим пользователем
-    public Set<Long> findUsersCommonFriends(@PathVariable int id, @PathVariable int friendId) {
-      return userService.findUsersCommonFriends(id, friendId);
+    public Set<Long> findUsersCommonFriends(@PathVariable int id, @PathVariable int otherId) {
+      return userService.findUsersCommonFriends(id, otherId);
     }
 
     @PostMapping
@@ -51,7 +51,6 @@ public class UserController {
     public User update(@RequestBody User user) {
        return userService.update(user);
     }
-
 
     @PutMapping("/{id}/friends/{friendId}")     //добавление в друзья
     public List<User> addFriend(@PathVariable int id, @PathVariable int friendId) {

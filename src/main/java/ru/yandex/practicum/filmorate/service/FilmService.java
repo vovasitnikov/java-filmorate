@@ -3,10 +3,8 @@ package ru.yandex.practicum.filmorate.service;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
-import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.InMemoryFilmStorage;
 
 import java.util.*;
@@ -52,16 +50,35 @@ public class FilmService {
         return inMemoryFilmStorage.update(film); //обновляем хранилище
     }
 
-    public Set<Long> findPopularFilms(int count) {
+    public Set<Film> findPopularFilms(int count) {
+        Set<Film> listOfFilms = new HashSet<>();
         HashMap<Integer, Film> films = inMemoryFilmStorage.getFilms();
-        
 
+        if (count == 0) {
+            List<Integer> keys = new ArrayList<Integer>(films.keySet());
+            for(int i = 0; i < 10; i++) {
+                Integer id = keys.get(i);
+                Film film = films.get(id);
+                listOfFilms.add(film);
+            }
+            return listOfFilms;
+        } else {
+            TreeMap<Film, Integer> sortedFilms = new TreeMap<>(Comparator.comparingInt(o -> o.getLikes().size()));
+            for (Map.Entry<Integer, Film> pair : films.entrySet()) {
+                sortedFilms.put(pair.getValue(), pair.getKey());
+            }
+            for (Map.Entry<Film, Integer> pair : sortedFilms.entrySet()) {
+                if (listOfFilms.size() == count) break;
+                listOfFilms.add(pair.getKey());
+            }
+            return listOfFilms;
+        }
     }
 
 
     public Film update(Film film) {
-            log.info("Получен запрос на редактирование фильма");
-            log.info("Фильм отредактирован и добавлен {}", film);
-            return inMemoryFilmStorage.update(film);
+        log.info("Получен запрос на редактирование фильма");
+        log.info("Фильм отредактирован и добавлен {}", film);
+        return inMemoryFilmStorage.update(film);
     }
 }
