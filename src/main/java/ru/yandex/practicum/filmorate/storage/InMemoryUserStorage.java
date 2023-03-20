@@ -63,4 +63,13 @@ public class InMemoryUserStorage implements UserStorage{
         }
         throw new ValidationException("Пользователя нет в базе");
     }
+
+    public User deleteUser(int id) {
+        if (users.containsKey(id)) {
+            return users.remove(id);
+        }
+        throw new UserNotFoundException("Пользователя не существует");
+    }
+
+
 }

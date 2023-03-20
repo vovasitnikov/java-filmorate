@@ -10,6 +10,7 @@ import ru.yandex.practicum.filmorate.service.FilmService;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 
 @RestController
@@ -33,6 +34,13 @@ public class FilmController {
         return Optional.ofNullable(filmService.findFilmById(id));
     }
 
+    //GET /films/popular?count={count}
+    //возвращает список из первых count фильмов по количеству лайков. Если значение параметра count не задано, верните первые 10.
+    @GetMapping("/popular?count={count}")
+    public Set<Long> findPopularFilms(@PathVariable int count) {
+        return filmService.findPopularFilms(count);
+    }
+
     @PostMapping
     public Film create(@RequestBody Film film) throws ValidationException {
         return filmService.create(film);
@@ -42,4 +50,27 @@ public class FilmController {
     public Film update(@RequestBody Film film) {
         return filmService.update(film);
     }
+
+    //пользователь ставит лайк фильму
+    @PutMapping("/{id}/like/{userId}")
+    public Film likeToFilm(@PathVariable int id, @PathVariable int IdUser) {
+        return filmService.likeToFilm(id, IdUser);
+    }
+
+    //пользователь удаляет лайк.
+    @DeleteMapping("/{id}/like/{userId}")     //удаление из друзей
+    public Film deleteUserLike(@PathVariable int id, @PathVariable int userId) {
+        return filmService.deleteUserLike(id, userId);
+    }
 }
+
+
+
+
+
+
+
+
+
+
+

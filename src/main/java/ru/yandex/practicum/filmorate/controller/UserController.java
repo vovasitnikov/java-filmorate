@@ -32,9 +32,14 @@ public class UserController {
         return Optional.ofNullable(userService.findUserById(id));
     }
 
-    @GetMapping("/{id}/friends")
+    @GetMapping("/{id}/friends")                 //возвращаем список пользователей, являющихся его друзьями
     public Set<Long> findUsersFriends(@PathVariable int id) {
         return userService.findUsersFriends(id);
+    }
+
+    @GetMapping("/{id}/friends/common/{otherId}")  //список друзей, общих с другим пользователем
+    public Set<Long> findUsersCommonFriends(@PathVariable int id, @PathVariable int friendId) {
+      return userService.findUsersCommonFriends(id, friendId);
     }
 
     @PostMapping
@@ -47,8 +52,19 @@ public class UserController {
        return userService.update(user);
     }
 
-    @PutMapping("/{id}/friends/{friendId}")
+
+    @PutMapping("/{id}/friends/{friendId}")     //добавление в друзья
     public List<User> addFriend(@PathVariable int id, @PathVariable int friendId) {
         return userService.addFriend(id, friendId);
+    }
+
+    @DeleteMapping("/{id}")
+    public User deleteUser(@PathVariable int id) {
+        return userService.deleteUser(id);
+    }
+
+    @DeleteMapping("/{id}/friends/{friendId}")     //удаление из друзей
+    public User deleteUserFriend(@PathVariable int id, @PathVariable int friendId) {
+      return  deleteUserFriend(id, friendId);
     }
 }
