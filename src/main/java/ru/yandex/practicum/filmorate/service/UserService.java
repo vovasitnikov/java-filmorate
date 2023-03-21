@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
 import ru.yandex.practicum.filmorate.exception.UserNotFoundException;
+import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.InMemoryUserStorage;
 
@@ -30,10 +31,19 @@ public class UserService {
         return inMemoryUserStorage.findUserById(id);
     }
 
-    public Set<Long> findUsersFriends(int id) {
+    public Set<User> findUsersFriends(int id) {
         User user = inMemoryUserStorage.findUserById(id);
         if (user == null) throw new UserNotFoundException("Пользователь не найден");
-        return user.getIdFriends();
+        //достанем нужных пользователей
+        Set<User> friends = new HashSet<>();
+        Set<Long> idFriends = user.getIdFriends(); //достаем список айдишников друзей
+        for (Long idFriend : idFriends) {
+            User friend = inMemoryUserStorage.findUserById(Math.toIntExact(idFriend));
+            if (friend != null) {
+                friends.add(friend);
+            }
+        }
+        return friends;
     }
 
     public Set<Long> findUsersCommonFriends(int id, int friendId) {
@@ -61,8 +71,8 @@ public class UserService {
         return inMemoryUserStorage.update(user);
     }
 
-    public List<User> addFriend(int id, int friendId) {
-        List<User> friends = new ArrayList<>();       //делаем список пользователей с обновленными друзьями
+    public Set<User> addFriend(int id, int friendId) {
+        Set<User> friends = new HashSet<>();     //делаем список пользователей с обновленными друзьями
         Set<Long> idFriends = new HashSet<>();
         Set<Long> idFriends1 = new HashSet<>();
 
@@ -72,8 +82,8 @@ public class UserService {
         if (user1 == null) throw new UserNotFoundException("Второй пользователь не найден");
         if (user.getIdFriends() != null) idFriends = user.getIdFriends();    //извлекаем из них списки друзей
         if (user1.getIdFriends() != null) idFriends1 = user1.getIdFriends();
-        idFriends.add((long) id);                     //добавляем в их списки айди новых друзей
-        idFriends1.add((long) friendId);
+        idFriends.add((long) friendId);                     //добавляем в их списки айди новых друзей
+        idFriends1.add((long) id);
         user.setIdFriends(idFriends);                 //обновляем списки друзей пользователей
         user1.setIdFriends(idFriends1);
         friends.add(inMemoryUserStorage.update(user)); //обновляем юзеров в хранилище

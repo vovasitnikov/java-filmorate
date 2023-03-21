@@ -33,7 +33,7 @@ public class UserController {
     }
 
     @GetMapping("/{id}/friends")                 //возвращаем список пользователей, являющихся его друзьями
-    public Set<Long> findUsersFriends(@PathVariable int id) {
+    public Set<User> findUsersFriends(@PathVariable int id) {
         return userService.findUsersFriends(id);
     }
 
@@ -53,7 +53,7 @@ public class UserController {
     }
 
     @PutMapping("/{id}/friends/{friendId}")     //добавление в друзья
-    public List<User> addFriend(@PathVariable int id, @PathVariable int friendId) {
+    public Set<User> addFriend(@PathVariable int id, @PathVariable int friendId) {
         return userService.addFriend(id, friendId);
     }
 
