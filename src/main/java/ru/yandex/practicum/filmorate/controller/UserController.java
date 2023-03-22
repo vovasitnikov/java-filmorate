@@ -38,7 +38,7 @@ public class UserController {
     }
 
     @GetMapping("/{id}/friends/common/{otherId}")  //список друзей, общих с другим пользователем
-    public Set<Long> findUsersCommonFriends(@PathVariable int id, @PathVariable int otherId) {
+    public List<User> findUsersCommonFriends(@PathVariable int id, @PathVariable int otherId) {
       return userService.findUsersCommonFriends(id, otherId);
     }
 

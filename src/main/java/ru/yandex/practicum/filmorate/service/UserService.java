@@ -46,7 +46,7 @@ public class UserService {
         return friends;
     }
 
-    public Set<Long> findUsersCommonFriends(int id, int friendId) {
+    public List<User> findUsersCommonFriends(int id, int friendId) {
         Set<Long> common = new HashSet<>();
         User user = inMemoryUserStorage.findUserById(id); //находим пользователей
         User user1 = inMemoryUserStorage.findUserById(friendId);
@@ -54,11 +54,19 @@ public class UserService {
         if (user1 == null) throw new UserNotFoundException("Второй пользователь не найден");
         Set<Long> idFriends = user.getIdFriends();    //извлекаем из них списки друзей
         Set<Long> idFriends1 = user1.getIdFriends();
-        if (idFriends != null || idFriends1 != null) {
+        if (idFriends != null && idFriends1 != null) {
             //находим общие элементы. общие друзья в обоих списках друзей
             common = idFriends.stream().filter(idFriends1::contains).collect(Collectors.toSet());
         }
-        return common;
+        //теперь следует вернуть сами объекты - общие друзья
+        List<User> commonFriends = new ArrayList<>();
+        for (Long idFriend : common) {
+            User friend = inMemoryUserStorage.findUserById(Math.toIntExact(idFriend));
+            if (friend != null) {
+                commonFriends.add(friend);
+            }
+        }
+        return commonFriends;
     }
 
     public User create(User user) {
