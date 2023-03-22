@@ -35,8 +35,8 @@ public class FilmController {
     }
 
     //возвращает список из первых count фильмов по количеству лайков. Если значение параметра count не задано, верните первые 10.
-    @GetMapping("/popular?count={count}")
-    public Set<Film> findPopularFilms(@PathVariable int count) {
+    @GetMapping("/popular")
+    public Set<Film> findPopularFilms(@RequestParam(value = "count", defaultValue = "10", required = false) Integer count) {
         return filmService.findPopularFilms(count);
     }
 
@@ -52,12 +52,12 @@ public class FilmController {
 
     //пользователь ставит лайк фильму
     @PutMapping("/{id}/like/{userId}")
-    public Film likeToFilm(@PathVariable int id, @PathVariable int IdUser) {
-        return filmService.likeToFilm(id, IdUser);
+    public Film likeToFilm(@PathVariable int id, @PathVariable int userId) {
+        return filmService.likeToFilm(id, userId);
     }
 
     //пользователь удаляет лайк.
-    @DeleteMapping("/{id}/like/{userId}")     //удаление из друзей
+    @DeleteMapping("/{id}/like/{userId}")     //удаление
     public Film deleteUserLike(@PathVariable int id, @PathVariable int userId) {
         return filmService.deleteUserLike(id, userId);
     }
