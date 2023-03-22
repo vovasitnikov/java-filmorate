@@ -2,6 +2,7 @@ package ru.yandex.practicum.filmorate.storage;
 
 import lombok.Data;
 import org.springframework.stereotype.Component;
+import ru.yandex.practicum.filmorate.exception.BadRequest;
 import ru.yandex.practicum.filmorate.exception.UserNotFoundException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
@@ -31,18 +32,19 @@ public class InMemoryUserStorage implements UserStorage{
 
     private void checkUser(User user) {
         if (!(user.getEmail() == null)) { //почта может быть null
-            if (user.getEmail().isBlank()) throw new ValidationException("Почта пустая");
-            if (!user.getEmail().contains("@")) throw new ValidationException("Почта не верная");
+            if (user.getEmail().isBlank()) throw new BadRequest("Почта пустая");
+            if (!user.getEmail().contains("@")) throw new BadRequest("Почта не верная");
         }
         if (!(user.getLogin() == null)) {
-            if (user.getLogin().isBlank()) throw new ValidationException("Логин пустой");
+            if (user.getLogin().isBlank()) throw new BadRequest("Логин пустой");
         }
+
         if (user.getName() == null || user.getName().isBlank()) {
             user.setName(user.getLogin());
         }
-        if (user.getBirthday() == null)  throw new ValidationException("Дата пустая");
+        if (user.getBirthday() == null)  throw new BadRequest("Дата пустая");
         if (user.getBirthday().isAfter(LocalDate.now())) {
-            throw new ValidationException("Дата рождения не верная");
+            throw new BadRequest("Дата рождения не верная");
         }
     }
 
