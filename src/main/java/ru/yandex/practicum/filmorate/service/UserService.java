@@ -31,11 +31,11 @@ public class UserService {
         return inMemoryUserStorage.findUserById(id);
     }
 
-    public Set<User> findUsersFriends(int id) {
+    public List<User> findUsersFriends(int id) {
         User user = inMemoryUserStorage.findUserById(id);
         if (user == null) throw new UserNotFoundException("Пользователь не найден");
         //достанем нужных пользователей
-        Set<User> friends = new HashSet<>();
+        List<User> friends = new ArrayList<>();
         Set<Long> idFriends = user.getIdFriends(); //достаем список айдишников друзей
         for (Long idFriend : idFriends) {
             User friend = inMemoryUserStorage.findUserById(Math.toIntExact(idFriend));
