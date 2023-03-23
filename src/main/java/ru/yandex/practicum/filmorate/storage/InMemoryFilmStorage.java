@@ -1,6 +1,7 @@
 package ru.yandex.practicum.filmorate.storage;
 
 import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.exception.BadRequest;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
@@ -13,6 +14,7 @@ import java.util.List;
 
 @Data
 @Component
+@Slf4j
 public class InMemoryFilmStorage implements FilmStorage{
     public int idFilm;
     private HashMap<Integer, Film> films = new HashMap<>();
@@ -25,6 +27,8 @@ public class InMemoryFilmStorage implements FilmStorage{
         checkFilm(film);
         film.setId(++idFilm);
         films.put(idFilm, film);
+        log.info("Получен запрос на создание нового фильма");
+        log.info("Фильм добавлен {}", film);
         return film;
     }
 
@@ -52,6 +56,8 @@ public class InMemoryFilmStorage implements FilmStorage{
             int id = films.get(idNew).getId();
             checkFilm(film);
             films.put(id, film);
+            log.info("Получен запрос на редактирование фильма");
+            log.info("Фильм отредактирован и добавлен {}", film);
             return film;
         }
         throw new ValidationException("Такого фильма в базе нет");

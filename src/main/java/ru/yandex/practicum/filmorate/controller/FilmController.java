@@ -1,17 +1,12 @@
-
 package ru.yandex.practicum.filmorate.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
-import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.service.FilmService;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
-
 
 @RestController
 @RequestMapping("/films")
@@ -30,18 +25,18 @@ public class FilmController {
     }
 
     @GetMapping("/{id}")
-    public Optional<Film> findById(@PathVariable int id) {
-        return Optional.ofNullable(filmService.findFilmById(id));
+    public Film findById(@PathVariable int id) {
+        return filmService.findFilmById(id);
     }
 
     //возвращает список из первых count фильмов по количеству лайков. Если значение параметра count не задано, верните первые 10.
     @GetMapping("/popular")
-    public Set<Film> findPopularFilms(@RequestParam(value = "count", defaultValue = "10", required = false) Integer count) {
+    public Set<Film> findPopularFilms(@RequestParam(value = "count", defaultValue = "10") Integer count) {
         return filmService.findPopularFilms(count);
     }
 
     @PostMapping
-    public Film create(@RequestBody Film film) throws ValidationException {
+    public Film create(@RequestBody Film film) {
         return filmService.create(film);
     }
 
@@ -62,14 +57,3 @@ public class FilmController {
         return filmService.deleteUserLike(id, userId);
     }
 }
-
-
-
-
-
-
-
-
-
-
-

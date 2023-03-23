@@ -10,16 +10,15 @@ import java.util.HashMap;
 import java.util.List;
 
 public interface FilmStorage {
-    int idFilm = 0;
-    HashMap<Integer, Film> films = new HashMap<>();
+    public int getIdFilm();
+    public HashMap<Integer, Film> getFilms();
 
-    @GetMapping
     public List<Film> findAll();
 
-    @PostMapping
-    public Film create(@RequestBody Film film);
+    public Film create(Film film);
 
     @PutMapping
-    public Film update(@RequestBody Film film);
+    public Film update(Film film);
 
+    public Film findFilmById(int id);
 }

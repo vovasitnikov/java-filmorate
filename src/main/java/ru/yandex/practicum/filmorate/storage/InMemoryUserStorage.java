@@ -1,6 +1,7 @@
 package ru.yandex.practicum.filmorate.storage;
 
 import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.exception.BadRequest;
 import ru.yandex.practicum.filmorate.exception.UserNotFoundException;
@@ -14,6 +15,7 @@ import java.util.List;
 
 @Data
 @Component
+@Slf4j
 public class InMemoryUserStorage implements UserStorage{
 
     public int id;
@@ -27,11 +29,12 @@ public class InMemoryUserStorage implements UserStorage{
         checkUser(user);
         user.setId(++id);
         users.put(id, user);
+        log.info("Создан новый пользователь");
         return user;
     }
 
     private void checkUser(User user) {
-        if (!(user.getEmail() == null)) { //почта может быть null
+        if (user.getEmail() != null) { //почта может быть null
             if (user.getEmail().isBlank()) throw new BadRequest("Почта пустая");
             if (!user.getEmail().contains("@")) throw new BadRequest("Почта не верная");
         }
@@ -61,6 +64,7 @@ public class InMemoryUserStorage implements UserStorage{
             int id = users.get(idNew).getId();
             checkUser(user);
             users.put(id, user);
+            log.info("Пользователь отредактирован");
             return user;
         }
         throw new ValidationException("Пользователя нет в базе");

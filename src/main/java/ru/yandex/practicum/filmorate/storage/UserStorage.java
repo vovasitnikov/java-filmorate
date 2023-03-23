@@ -23,4 +23,8 @@ public interface UserStorage {
 
     @PutMapping
     public User update(@RequestBody User user);
+
+    public User findUserById(int id);
+
+    public User deleteUser(int id);
 }
