@@ -12,9 +12,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-@Data
+
 @Component
 @Slf4j
+@Data
 public class InMemoryFilmStorage implements FilmStorage{
     public int idFilm;
     private HashMap<Integer, Film> films = new HashMap<>();

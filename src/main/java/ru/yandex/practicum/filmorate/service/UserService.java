@@ -30,7 +30,6 @@ public class UserService {
 
     public List<User> findUsersFriends(int id) {
         User user = inMemoryUserStorage.findUserById(id);
-        if (user == null) throw new UserNotFoundException("Пользователь не найден");
         //достанем нужных пользователей
         List<User> friends = new ArrayList<>();
         Set<Long> idFriends = user.getIdFriends(); //достаем список айдишников друзей
@@ -47,8 +46,6 @@ public class UserService {
         Set<Long> common = new HashSet<>();
         User user = inMemoryUserStorage.findUserById(id); //находим пользователей
         User userFriend = inMemoryUserStorage.findUserById(friendId);
-        if (user == null) throw new UserNotFoundException("Первый пользователь не найден");
-        if (userFriend == null) throw new UserNotFoundException("Второй пользователь не найден");
         Set<Long> idFriends = user.getIdFriends();    //извлекаем из них списки друзей
         Set<Long> idFriends1 = userFriend.getIdFriends();
         if (idFriends != null && idFriends1 != null) {
@@ -81,10 +78,10 @@ public class UserService {
 
         User user = inMemoryUserStorage.findUserById(id); //находим пользователей
         User userFriend = inMemoryUserStorage.findUserById(friendId);
-        if (user == null) throw new UserNotFoundException("Первый пользователь не найден");
-        if (userFriend == null) throw new UserNotFoundException("Второй пользователь не найден");
-        if (user.getIdFriends() != null) idFriends = user.getIdFriends();    //извлекаем из них списки друзей
-        if (userFriend.getIdFriends() != null) idFriends1 = userFriend.getIdFriends();
+        //if (user.getIdFriends() != null) idFriends = user.getIdFriends();    //извлекаем из них списки друзей
+        //if (userFriend.getIdFriends() != null) idFriends1 = userFriend.getIdFriends();
+        idFriends = user.getIdFriends();    //извлекаем из них списки друзей
+        idFriends1 = userFriend.getIdFriends();
         idFriends.add((long) friendId);                     //добавляем в их списки айди новых друзей
         idFriends1.add((long) id);
         user.setIdFriends(idFriends);                 //обновляем списки друзей пользователей

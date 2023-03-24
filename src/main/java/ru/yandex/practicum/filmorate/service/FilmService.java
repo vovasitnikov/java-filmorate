@@ -7,6 +7,7 @@ import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.storage.FilmStorage;
 import ru.yandex.practicum.filmorate.storage.InMemoryFilmStorage;
+import ru.yandex.practicum.filmorate.storage.UserStorage;
 
 import java.util.*;
 
@@ -14,6 +15,7 @@ import java.util.*;
 public class FilmService {
 
     private FilmStorage inMemoryFilmStorage;
+    private UserStorage inMemoryUserStorage;
 
     @Autowired
     public FilmService(InMemoryFilmStorage inMemoryFilmStorage) {
@@ -46,6 +48,7 @@ public class FilmService {
 
     public Film deleteUserLike(int id, int userId) {
         if (userId < 0) throw new UserNotFoundException("Пользователя не существует");
+        if (inMemoryUserStorage.findUserById(id) == null) throw new UserNotFoundException("Пользователь не найден");
         Film film = inMemoryFilmStorage.findFilmById(id); //извлекаем фильм
         Set<Long> filmLikes = film.getLikes(); //извлекаем список лайков фильма
         filmLikes.remove(userId); //добавляем в список айдишник пользователя, поставившего лайк
