@@ -24,11 +24,10 @@ public class InMemoryFilmStorage implements FilmStorage{
         return new ArrayList<>(films.values());
     }
 
-    public Film create(Film film) throws ValidationException {
+    public Film create(Film film)  {
         checkFilm(film);
         film.setId(++idFilm);
         films.put(idFilm, film);
-        log.info("Получен запрос на создание нового фильма");
         log.info("Фильм добавлен {}", film);
         return film;
     }
