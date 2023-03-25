@@ -48,7 +48,7 @@ public class FilmService {
 
     public Film deleteUserLike(int id, int userId) {
         if (userId < 0) throw new UserNotFoundException("Пользователя не существует");
-       // if (inMemoryUserStorage.findUserById(id) == null) throw new UserNotFoundException("Пользователь не найден");
+        //inMemoryUserStorage.findUserById(id);
         Film film = inMemoryFilmStorage.findFilmById(id); //извлекаем фильм
         Set<Long> filmLikes = film.getLikes(); //извлекаем список лайков фильма
         filmLikes.remove(userId); //добавляем в список айдишник пользователя, поставившего лайк

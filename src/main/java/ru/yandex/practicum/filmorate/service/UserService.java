@@ -93,9 +93,13 @@ public class UserService {
 
     public User deleteUserFriend(int id, int friendId) {
         User user = inMemoryUserStorage.findUserById(id); //находим пользователей
+        User userFriend = inMemoryUserStorage.findUserById(friendId); //находим пользователей
         Set<Long> idFriends = user.getIdFriends();    //извлекаем из них списки друзей
+        Set<Long> idFriendFriends = userFriend.getIdFriends();    //извлекаем из них списки друзей
         idFriends.remove(friendId); //убираем друга из списка друзей
+        idFriendFriends.remove(id); //убираем друга из списка друзей
         user.setIdFriends(idFriends);                 //обновляем списки друзей пользователей
+        userFriend.setIdFriends(idFriendFriends);                 //обновляем списки друзей пользователей
         return inMemoryUserStorage.update(user);
     }
 }

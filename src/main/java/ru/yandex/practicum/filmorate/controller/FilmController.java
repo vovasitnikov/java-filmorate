@@ -1,6 +1,7 @@
 package ru.yandex.practicum.filmorate.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.service.FilmService;
@@ -52,6 +53,7 @@ public class FilmController {
     }
 
     //пользователь удаляет лайк.
+    //@ResponseStatus(HttpStatus.NOT_FOUND)
     @DeleteMapping("/{id}/like/{userId}")     //удаление
     public Film deleteUserLike(@PathVariable int id, @PathVariable int userId) {
         return filmService.deleteUserLike(id, userId);
