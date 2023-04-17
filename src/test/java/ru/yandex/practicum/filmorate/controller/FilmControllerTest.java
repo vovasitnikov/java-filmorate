@@ -7,7 +7,9 @@ import ru.yandex.practicum.filmorate.model.Film;
 
 import java.time.LocalDate;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -15,11 +17,12 @@ class FilmControllerTest {
 
     private Film film;
     private Map<Integer, Film> mapListFilm;
+    private Set<Long> likes = new HashSet<>();
 
     @BeforeEach
     void load() {
         LocalDate releaseDate = LocalDate.of(1985, 9, 12);
-        film = new Film(1, "Avatar", releaseDate, "Film", 10);
+        film = new Film(1, "Avatar", releaseDate, "Film", 10, likes);
         mapListFilm = new HashMap<>();
     }
 

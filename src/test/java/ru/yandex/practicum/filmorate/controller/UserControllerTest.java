@@ -7,18 +7,21 @@ import ru.yandex.practicum.filmorate.model.User;
 
 import java.time.LocalDate;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class UserControllerTest {
     private User user;
     private Map<Integer, User> mapListUser;
+    private Set<Long> friends = new HashSet<>();
 
     @BeforeEach
     void load() {
         LocalDate birthday = LocalDate.of(1985, 9, 12);
-        user = new User(1, "vova_sitnikov@mail.ru", "Vova", "Vova", birthday);
+        user = new User(1, "vova_sitnikov@mail.ru", "Vova", "Vova", birthday, friends);
         mapListUser = new HashMap<>();
     }
 
