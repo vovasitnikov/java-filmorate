@@ -3,13 +3,7 @@ package ru.yandex.practicum.filmorate.service.film;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import ru.yandex.practicum.filmorate.exception.storage.dao.genre.GenreNotFoundException;
-import ru.yandex.practicum.filmorate.exception.storage.dao.mpa.MpaNotFoundException;
-import ru.yandex.practicum.filmorate.exception.storage.film.FilmAlreadyExistsException;
-import ru.yandex.practicum.filmorate.exception.storage.film.FilmNotFoundException;
-import ru.yandex.practicum.filmorate.exception.storage.film.LikeAlreadyExistsException;
-import ru.yandex.practicum.filmorate.exception.storage.film.LikeNotFoundException;
-import ru.yandex.practicum.filmorate.exception.storage.user.UserNotFoundException;
+import ru.yandex.practicum.filmorate.exception.*;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.Genre;
 import ru.yandex.practicum.filmorate.storage.dao.film.FilmStorage;
@@ -22,13 +16,13 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static ru.yandex.practicum.filmorate.exception.storage.dao.genre.GenreNotFoundException.GENRE_NOT_FOUND;
-import static ru.yandex.practicum.filmorate.exception.storage.dao.mpa.MpaNotFoundException.MPA_NOT_FOUND;
-import static ru.yandex.practicum.filmorate.exception.storage.film.FilmAlreadyExistsException.FILM_ALREADY_EXISTS;
-import static ru.yandex.practicum.filmorate.exception.storage.film.FilmNotFoundException.FILM_NOT_FOUND;
-import static ru.yandex.practicum.filmorate.exception.storage.film.LikeAlreadyExistsException.LIKE_ALREADY_EXISTS;
-import static ru.yandex.practicum.filmorate.exception.storage.film.LikeNotFoundException.LIKE_NOT_FOUND;
-import static ru.yandex.practicum.filmorate.exception.storage.user.UserNotFoundException.USER_NOT_FOUND;
+import static ru.yandex.practicum.filmorate.exception.FilmAlreadyExistsException.FILM_ALREADY_EXISTS;
+import static ru.yandex.practicum.filmorate.exception.FilmNotFoundException.FILM_NOT_FOUND;
+import static ru.yandex.practicum.filmorate.exception.GenreNotFoundException.GENRE_NOT_FOUND;
+import static ru.yandex.practicum.filmorate.exception.LikeAlreadyExistsException.LIKE_ALREADY_EXISTS;
+import static ru.yandex.practicum.filmorate.exception.LikeNotFoundException.LIKE_NOT_FOUND;
+import static ru.yandex.practicum.filmorate.exception.MpaNotFoundException.MPA_NOT_FOUND;
+import static ru.yandex.practicum.filmorate.exception.UserNotFoundException.USER_NOT_FOUND;
 
 @Slf4j
 @Service
@@ -104,37 +98,10 @@ public class FilmDbService implements FilmService {
         likeDao.delete(filmID, userID);
     }
 
-    /**
-     * Метод сравнивает два фильма по количеству
-     * лайков (в убывающем порядке).
-     *
-     * @param film      первый film для сравнения.
-     * @param otherFilm второй film для сравнения.
-     * @return Значение 0, если количество лайков
-     * одинаковое; Значение меньше 0, если у первого
-     * больше лайков, чем у второго; И значение
-     * больше 0, если у второго больше лайков, чем
-     * у первого.
-     */
     private int likeCompare(Film film, Film otherFilm) {
         return Integer.compare(likeDao.count(otherFilm.getId()), likeDao.count(film.getId()));
     }
 
-    /**
-     * Метод проверяет корректность фильма,
-     * для последующего добавления в хранилище.
-     *
-     * @param film объект фильма.
-     * @throws FilmAlreadyExistsException в случае, если фильм
-     *                                    уже присутствует в хранилище.
-     * @throws IllegalArgumentException   в случае, если фильму
-     *                                    задан идентификатор,
-     *                                    отличающийся от 0.
-     * @throws MpaNotFoundException       в случае, если идентификатор
-     *                                    рейтинга MPA не найден.
-     * @throws GenreNotFoundException     в случае, если идентификатор
-     *                                    жанра не найден.
-     */
     private void checkFilmToAdd(Film film) {
         log.debug("checkFilmToAdd({}).", film);
         String msg = "Не удалось добавить фильм: {}.";
@@ -159,18 +126,6 @@ public class FilmDbService implements FilmService {
         }
     }
 
-    /**
-     * Метод проверяет корректность фильма,
-     * для последующего обновления в хранилище.
-     *
-     * @param film объект фильма.
-     * @throws FilmNotFoundException  в случае, если фильм
-     *                                отсутствует в хранилище.
-     * @throws MpaNotFoundException   в случае, если идентификатор
-     *                                рейтинга MPA не найден.
-     * @throws GenreNotFoundException в случае, если идентификатор
-     *                                жанра не найден.
-     */
     private void checkFilmToUpdate(Film film) {
         log.debug("checkFilmToUpdate({}).", film);
         String msg = "Не удалось обновить фильм: {}.";
@@ -190,22 +145,6 @@ public class FilmDbService implements FilmService {
         }
     }
 
-    /**
-     * Метод проверяет корректность лайка
-     * пользователя, для последующего добавления
-     * в хранилище.
-     *
-     * @param filmID идентификатор фильма, которому
-     *               пользователь хочет поставить лайк.
-     * @param userID идентификатор пользователя, который
-     *               хочет поставить лайк.
-     * @throws FilmNotFoundException      в случае, если фильм
-     *                                    отсутствует в хранилище.
-     * @throws UserNotFoundException      в случае, если пользователь
-     *                                    отсутствует в хранилище.
-     * @throws LikeAlreadyExistsException в случае, если пользователь
-     *                                    уже ставил лайк фильму.
-     */
     private void checkLikeToAdd(long filmID, long userID) {
         log.debug("checkLikeToAdd({}, {}).", filmID, userID);
         String msg = "Не удалось добавить лайк: {}.";
@@ -223,22 +162,6 @@ public class FilmDbService implements FilmService {
         }
     }
 
-    /**
-     * Метод проверяет корректность лайка
-     * пользователя, для последующего добавления
-     * в хранилище.
-     *
-     * @param filmID идентификатор фильма, которому
-     *               пользователь хочет поставить лайк.
-     * @param userID идентификатор пользователя, который
-     *               хочет поставить лайк.
-     * @throws FilmNotFoundException в случае, если фильм
-     *                               отсутствует в хранилище.
-     * @throws UserNotFoundException в случае, если пользователь
-     *                               отсутствует в хранилище.
-     * @throws LikeNotFoundException в случае, если пользователь
-     *                               не ставил лайк фильму.
-     */
     private void checkLikeToDelete(long filmID, long userID) {
         log.debug("checkLikeToDelete({}, {}).", filmID, userID);
         String msg = "Не удалось удалить лайк: {}.";
