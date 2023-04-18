@@ -18,7 +18,7 @@ import static java.lang.String.format;
 @Slf4j
 @Repository
 @RequiredArgsConstructor
-public class UserDbStorage implements UserStorage{
+public class UserDbStorage implements UserStorage {
 
     private final JdbcTemplate jdbcTemplate;
 

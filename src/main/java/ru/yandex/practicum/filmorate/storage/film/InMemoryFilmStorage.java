@@ -1,3 +1,4 @@
+/*
 package ru.yandex.practicum.filmorate.storage.film;
 
 import lombok.Data;
@@ -24,13 +25,15 @@ public class InMemoryFilmStorage implements FilmStorage{
         return new ArrayList<>(films.values());
     }
 
-    public Film create(Film film)  {
+*/
+/*    public Film create(Film film)  {
         checkFilm(film);
         film.setId(++idFilm);
         films.put(idFilm, film);
         log.info("Фильм добавлен {}", film);
         return film;
-    }
+    }*//*
+
 
     private void checkFilm(Film film) {
         LocalDate bornCinema = LocalDate.of(1895, 12, 28);
@@ -50,7 +53,8 @@ public class InMemoryFilmStorage implements FilmStorage{
         throw new ValidationException("Такого фильма в базе нет");
     }
 
-    public Film update(Film film) {
+*/
+/*    public Film update(Film film) {
         int idNew = film.getId();
         if(films.containsKey(idNew)) {
             int id = films.get(idNew).getId();
@@ -61,6 +65,8 @@ public class InMemoryFilmStorage implements FilmStorage{
             return film;
         }
         throw new ValidationException("Такого фильма в базе нет");
-    }
+    }*//*
+
 }
 
+*/
