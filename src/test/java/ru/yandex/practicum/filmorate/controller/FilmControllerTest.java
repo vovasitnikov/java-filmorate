@@ -1,3 +1,4 @@
+/*
 package ru.yandex.practicum.filmorate.controller;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -19,26 +20,33 @@ class FilmControllerTest {
     private Map<Integer, Film> mapListFilm;
     private Set<Long> likes = new HashSet<>();
 
+*/
 /*    @BeforeEach
     void load() {
         LocalDate releaseDate = LocalDate.of(1985, 9, 12);
         film = new Film(1, "Avatar", releaseDate, "Film", 10, likes);
         mapListFilm = new HashMap<>();
-    }*/
+    }*//*
 
+
+*/
 /*    @Test
     void findAll() {
         mapListFilm.put(film.getId(), film);
         assertEquals(1, mapListFilm.size());
-    }*/
+    }*//*
 
+
+*/
 /*    @Test
     void create() {
         mapListFilm.put(film.getId(), film);
         Film savedFilm = mapListFilm.get(1);
         assertEquals(film, savedFilm);
-    }*/
+    }*//*
 
+
+*/
 /*    @Test
     void createEmptyName() {
         try {
@@ -50,8 +58,10 @@ class FilmControllerTest {
             return;
         }
         fail("Тест провален");
-    }*/
+    }*//*
 
+
+*/
 /*    @Test
     void createLongDescription() {
         try {
@@ -67,8 +77,10 @@ class FilmControllerTest {
             return;
         }
         fail("Тест провален");
-    }*/
+    }*//*
 
+
+*/
 /*    @Test
     void createEmptyDate() {
         try {
@@ -80,8 +92,10 @@ class FilmControllerTest {
             return;
         }
         fail("Тест провален");
-    }*/
+    }*//*
 
+
+*/
 /*    @Test
     void createFailDuration() {
         try {
@@ -93,8 +107,10 @@ class FilmControllerTest {
             return;
         }
         fail("Тест провален");
-    }*/
+    }*//*
 
+
+*/
 /*    private void checkFilm(Film film) {
         LocalDate bornCinema = LocalDate.of(1895, 12, 28);
         if (film.getId() == 0) film.setId(1);
@@ -103,8 +119,10 @@ class FilmControllerTest {
         if (film.getReleaseDate() == null)  throw new ValidationException("Дата пустая");
         if (film.getReleaseDate().isBefore(bornCinema)) throw new ValidationException("Дата выпуска слишком ранняя");
         if (film.getDuration() < 0) throw new ValidationException("Продолжительность меньше нуля");
-    }*/
+    }*//*
 
+
+*/
 /*    @Test
     void update() {
         mapListFilm.put(film.getId(), film);
@@ -112,5 +130,6 @@ class FilmControllerTest {
         savedFilm.setName("Sergey");
         mapListFilm.put(savedFilm.getId(), savedFilm);
         assertEquals(savedFilm, mapListFilm.get(1));
-    }*/
-}
+    }*//*
+
+}*/
