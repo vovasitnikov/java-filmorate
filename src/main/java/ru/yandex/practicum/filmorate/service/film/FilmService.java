@@ -11,6 +11,6 @@ public interface FilmService extends Service<Film> {
     Collection<Film> getPopularFilms(int count);
 
     void addLike(long filmID, long userID);
-    
+
     void deleteLike(long filmID, long userID);
 }
