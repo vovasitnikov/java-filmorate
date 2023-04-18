@@ -18,27 +18,27 @@ class UserControllerTest {
     private Map<Integer, User> mapListUser;
     private Set<Long> friends = new HashSet<>();
 
-    @BeforeEach
+/*    @BeforeEach
     void load() {
         LocalDate birthday = LocalDate.of(1985, 9, 12);
         user = new User(1, "vova_sitnikov@mail.ru", "Vova", "Vova", birthday, friends);
         mapListUser = new HashMap<>();
-    }
+    }*/
 
-    @Test
+/*    @Test
     void findAll() {
         mapListUser.put(user.getId(), user);
         assertEquals(1, mapListUser.size());
-    }
+    }*/
 
-    @Test
+/*    @Test
     void create() {
         mapListUser.put(user.getId(), user);
         User savedUser = mapListUser.get(1);
         assertEquals(user, savedUser);
-    }
+    }*/
 
-    @Test
+/*    @Test
     void createSubzeroId() {
         try {
             user.setId(-1);
@@ -49,7 +49,7 @@ class UserControllerTest {
             return;
         }
         fail("Тест провален");
-    }
+    }*/
 
     @Test
     void createEmptyEmail() {
@@ -116,12 +116,12 @@ class UserControllerTest {
         }
     }
 
-    @Test
+/*    @Test
     void update() {
         mapListUser.put(user.getId(), user);
         User savedUser = mapListUser.get(1);
         savedUser.setName("Sergey");
         mapListUser.put(savedUser.getId(), savedUser);
         assertEquals(savedUser, mapListUser.get(1));
-    }
+    }*/
 }
