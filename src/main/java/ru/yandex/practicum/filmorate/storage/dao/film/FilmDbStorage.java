@@ -18,12 +18,10 @@ import java.util.Set;
 
 import static java.lang.String.format;
 
-
 @Slf4j
 @Repository
 @RequiredArgsConstructor
 public class FilmDbStorage implements FilmStorage{
-
     private final JdbcTemplate jdbcTemplate;
 
     @Override
