@@ -34,12 +34,12 @@ public class UserControllerTest {
     }
 
     @Test
-    void createUser_acceptId_idIsNull(){
+    void createUser_acceptId_idIsNull() {
         assertTrue(validator.validate(user).isEmpty(), "Валидатор не пропустил null в поле id");
     }
 
     @Test
-    void getAllUsers_size1ListUsers_createOneUser(){
+    void getAllUsers_size1ListUsers_createOneUser() {
         userController.addUser(user);
         List<User> allUsers = userController.getAllUsers();
 
@@ -47,50 +47,50 @@ public class UserControllerTest {
     }
 
     @Test
-    void createUser_rejectEmail_emailIsNull(){
+    void createUser_rejectEmail_emailIsNull() {
         user.setEmail(null);
         assertEquals(1, validator.validate(user).size(), "Валидатор пропустил null в email");
     }
 
     @Test
-    void createUser_rejectEmail_emailIsEmpty(){
+    void createUser_rejectEmail_emailIsEmpty() {
         user.setEmail("");
         assertEquals(1, validator.validate(user).size(), "Валидатор пропустил пустую строку в email");
 
     }
 
     @Test
-    void createUser_acceptEmail_emailIsNotEmptyAndNotNull(){
+    void createUser_acceptEmail_emailIsNotEmptyAndNotNull() {
         assertTrue(validator.validate(user).isEmpty(), "Валидатор отклонил корректное значение");
     }
 
     @Test
-    void createUser_rejectLogin_loginIsNull(){
+    void createUser_rejectLogin_loginIsNull() {
         user.setLogin(null);
         assertEquals(1, validator.validate(user).size(), "Валидатор пропустил null в login");
 
     }
 
     @Test
-    void createUser_rejectLogin_loginIsEmpty(){
+    void createUser_rejectLogin_loginIsEmpty() {
         user.setLogin("");
         assertEquals(1, validator.validate(user).size(), "Валидатор пропустил пустую строку в login");
     }
 
     @Test
-    void createUser_acceptLogin_loginIsNotEmptyAndNotNull(){
+    void createUser_acceptLogin_loginIsNotEmptyAndNotNull() {
         assertTrue(validator.validate(user).isEmpty(), "Валидатор отклонил корректное значение");
     }
 
     @Test
-    void createUser_rejectBirthday_birthdayIsFuture(){
+    void createUser_rejectBirthday_birthdayIsFuture() {
         user.setBirthday(LocalDate.now().plusDays(10));
         assertEquals(1, validator.validate(user).size(),
                 "Валидатор пропустил значение дня рождения, позднее настоящей даты");
     }
 
     @Test
-    void updateUser_validationException_userWithIdIsNull(){
+    void updateUser_validationException_userWithIdIsNull() {
         userController.addUser(user);
 
         user.setId(null);
@@ -99,7 +99,7 @@ public class UserControllerTest {
     }
 
     @Test
-    void updateUser_validationException_userWithIdIsIncorrect(){
+    void updateUser_validationException_userWithIdIsIncorrect() {
         userController.addUser(user);
 
         user.setId(-5);
@@ -108,7 +108,7 @@ public class UserControllerTest {
     }
 
     @Test
-    void addUser_validationException_userWithLoginIsAlreadyExistInBase(){
+    void addUser_validationException_userWithLoginIsAlreadyExistInBase() {
         userController.addUser(user);
 
         User newUser = new User(null, "user1@mail.ru", "userLogin", "userName", LocalDate.now());
@@ -118,7 +118,7 @@ public class UserControllerTest {
     }
 
     @Test
-    void updateUser_validationException_userIdIsNotExistInBase(){
+    void updateUser_validationException_userIdIsNotExistInBase() {
         userController.addUser(user);
 
         User newUser = new User(10, "user@mail.ru", "userLogin1", "userName", LocalDate.now());
