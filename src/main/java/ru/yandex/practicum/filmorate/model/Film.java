@@ -1,44 +1,57 @@
 package ru.yandex.practicum.filmorate.model;
 
-
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Positive;
-import javax.validation.constraints.Size;
-
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import ru.yandex.practicum.filmorate.constraint.DateRelease;
 
+import javax.validation.constraints.*;
 import java.time.LocalDate;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class Film {
-    Long id;
 
-    @NotNull(message = "У фильма должно быть имя")
-    @NotBlank(message = "Имя не может быть пустым")
-    String name;
+    @Null
+    private Integer id;
 
-    @NotNull(message = "У фильма должна быть указана дата релиза")
-    LocalDate releaseDate;
+    @NotBlank(message = "Title of film can must be not empty")
+    private String name;
 
-    @NotNull(message = "У фильма должно быть описание")
-    @Size(max = 200, message = "Описание не должно больше 200 символов")
-    String description;
+    @Size(min = 10, max = 200, message = "Length of film description mist be: max = 200 characters, min = 10 characters")
+    @NotNull
+    private String description;
 
-    @NotNull(message = "У фильма должна быть указана продолжительность")
-    @Positive(message = "Продолжительность фильма не может быть отрицательной")
-    int duration;
+    @DateRelease(day = 28, month = 12, year = 1895, message = "Date of release must be after than 28 December 1895")
+    private LocalDate releaseDate;
 
-    @NotNull(message = "У фильма должен быть указан рейтинг MPA")
-    private Mpa mpa;
+    @Positive(message = "Duration of film must be positive value")
+    private Integer duration;
 
-    Set<Long> likes = new HashSet<>();
-    private Set<Genre> genres = new HashSet<>();
+    @JsonIgnore
+    private final Set<Integer> userLikes = new HashSet<>();
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Film film = (Film) o;
+        return Objects.equals(name, film.name)
+                && Objects.equals(description, film.description)
+                && Objects.equals(releaseDate, film.releaseDate)
+                && Objects.equals(duration, film.duration);
+    }
+
+    public void addLike(Integer idUser){
+        userLikes.add(idUser);
+    }
+
+    public void deleteLike(Integer idUser) {
+        userLikes.remove(idUser);
+    }
 }

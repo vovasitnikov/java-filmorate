@@ -1,5 +1,6 @@
 package ru.yandex.practicum.filmorate.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -13,22 +14,31 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 public class User {
-    Long id;
-    @NotNull(message = "У пользователя должна быть указанна эл.почта")
-    @Email(message = "Некорректная почта")
-    String email;
 
-    @NotNull(message = "У пользователя должен быть указан логин")
-    @NotBlank(message = "Логин не может быть пустым")
-    @Pattern(regexp = "\\S+", message = "В логине не могут находиться пробелы")
-    String login;
+    @Null
+    private Integer id;
 
-    String name;
+    @NotBlank(message = "Email must be not empty and not null")
+    @Email(message = "Email must be format email address: example@google.com")
+    private String email;
 
-    @NotNull(message = "У пользователя должна быть указанна дата рождения")
-    @Past(message = "Дата рождения не может быть в будущем")
-    LocalDate birthday;
+    @NotBlank(message = "Login must be not empty and not null")
+    private String login;
 
-    Set<Long> idFriends = new HashSet<>();
+    private String name;
+
+    @PastOrPresent(message = "Birthday must be in the past, not future")
+    private LocalDate birthday;
+
+    @JsonIgnore
+    private final Set<Integer> friends = new HashSet<>();
+
+    public void addFriend(Integer id){
+        friends.add(id);
+    }
+
+    public void deleteFriend(Integer id){
+        friends.remove(id);
+    }
 
 }
