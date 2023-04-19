@@ -26,7 +26,7 @@ public class UserControllerTest {
     }
 
     @BeforeEach
-    void init(){
+    void init() {
         user = new User(null, "user@mail.ru", "userLogin", "userName", LocalDate.now());
         UserStorage userStorage = new InMemoryUserStorage();
         UserService userService = new UserService(userStorage);
