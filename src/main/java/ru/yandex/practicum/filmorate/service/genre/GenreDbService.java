@@ -18,13 +18,16 @@ public class GenreDbService implements GenreService {
     private final GenreDao genreDao;
 
     public Genre get(long genreID) {
-        if (genreID > (int) genreID) {
+
+            if (genreID > (int) genreID) {
             throw new IllegalArgumentException("genreID должен быть типа INTEGER");
         }
+
         if (!genreDao.contains((int) genreID)) {
             log.warn("Не удалось вернуть жанр: {}.", String.format(GENRE_NOT_FOUND, genreID));
             throw new GenreNotFoundException(String.format(GENRE_NOT_FOUND, genreID));
         }
+
         return genreDao.get((int) genreID);
     }
 

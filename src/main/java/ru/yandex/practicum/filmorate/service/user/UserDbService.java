@@ -95,6 +95,9 @@ public class UserDbService implements UserService {
     private void checkUserToAdd(User user) {
         log.debug("checkUserToAdd({}).", user);
         String msg = "Не удалось добавить пользователя: {}.";
+        if (user.getName() == "") {
+            user.setName("common");
+        }
         if (user.getId() != null) {
             if (userStorage.contains(user.getId())) {
                 log.warn(msg, String.format(USER_ALREADY_EXISTS, user.getId()));

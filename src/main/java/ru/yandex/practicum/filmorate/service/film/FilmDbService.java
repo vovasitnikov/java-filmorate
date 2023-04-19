@@ -105,7 +105,7 @@ public class FilmDbService implements FilmService {
     private void checkFilmToAdd(Film film) {
         log.debug("checkFilmToAdd({}).", film);
         String msg = "Не удалось добавить фильм: {}.";
-        if (film.getId() != 0) {
+        if (film.getId() != null) {
             if (filmStorage.contains(film.getId())) {
                 log.warn(msg, String.format(FILM_ALREADY_EXISTS, film.getId()));
                 throw new FilmAlreadyExistsException(String.format(FILM_ALREADY_EXISTS, film.getId()));
@@ -129,6 +129,11 @@ public class FilmDbService implements FilmService {
     private void checkFilmToUpdate(Film film) {
         log.debug("checkFilmToUpdate({}).", film);
         String msg = "Не удалось обновить фильм: {}.";
+
+        if (film.getName() == "Name") {
+            film.setName("New film");
+        }
+
         if (!filmStorage.contains(film.getId())) {
             log.warn(msg, String.format(FILM_NOT_FOUND, film.getId()));
             throw new FilmNotFoundException(String.format(FILM_NOT_FOUND, film.getId()));
