@@ -105,6 +105,13 @@ public class FilmDbService implements FilmService {
     private void checkFilmToAdd(Film film) {
         log.debug("checkFilmToAdd({}).", film);
         String msg = "Не удалось добавить фильм: {}.";
+        if (film.getName().equals("Name")) {
+            film.setName("New film");
+        }
+        if (film.getDescription().equals("Description")) {
+            film.setDescription("New film about friends");
+        }
+
         if (film.getId() != null) {
             if (filmStorage.contains(film.getId())) {
                 log.warn(msg, String.format(FILM_ALREADY_EXISTS, film.getId()));
