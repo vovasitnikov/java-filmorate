@@ -56,7 +56,7 @@ public class FilmControllerTest {
     }
 
     @Test
-    void Film_rejectName_nameIsEmpty() {
+    void film_rejectName_nameIsEmpty() {
         film.setName("");
         assertEquals(1, validator.validate(film).size(),
                 "Валидатор пропустил пустую строку в поле name");
