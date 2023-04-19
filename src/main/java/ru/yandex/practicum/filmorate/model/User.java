@@ -33,11 +33,11 @@ public class User {
     @JsonIgnore
     private final Set<Integer> friends = new HashSet<>();
 
-    public void addFriend(Integer id){
+    public void addFriend(Integer id) {
         friends.add(id);
     }
 
-    public void deleteFriend(Integer id){
+    public void deleteFriend(Integer id) {
         friends.remove(id);
     }
 

@@ -47,7 +47,7 @@ public class Film {
                 && Objects.equals(duration, film.duration);
     }
 
-    public void addLike(Integer idUser){
+    public void addLike(Integer idUser) {
         userLikes.add(idUser);
     }
 
