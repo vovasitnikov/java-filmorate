@@ -1,106 +1,90 @@
 package ru.yandex.practicum.filmorate.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import ru.yandex.practicum.filmorate.exception.ExistException;
 import ru.yandex.practicum.filmorate.model.User;
-import ru.yandex.practicum.filmorate.storage.InMemoryUserStorage;
-import ru.yandex.practicum.filmorate.storage.UserStorage;
+import ru.yandex.practicum.filmorate.storage.UserDao;
 
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Optional;
 
+@Slf4j
+@RequiredArgsConstructor
 @Service
 public class UserService {
 
-    private UserStorage inMemoryUserStorage;
+    private final UserDao userRepository;
+    private final FriendshipService friendshipService;
 
-    @Autowired
-    public UserService(InMemoryUserStorage inMemoryUserStorage) {
-        this.inMemoryUserStorage = inMemoryUserStorage;
-    }
+    public User createUser(User user) {
+        log.info("Request create new User");
 
-    public List<User> findAll() {
-        return inMemoryUserStorage.findAll();
-    }
-
-    public User findUserById(int id) {
-        return inMemoryUserStorage.findUserById(id);
-    }
-
-    public List<User> findUsersFriends(int id) {
-        User user = inMemoryUserStorage.findUserById(id);
-        //достанем нужных пользователей
-        List<User> friends = new ArrayList<>();
-        Set<Long> idFriends = user.getIdFriends(); //достаем список айдишников друзей
-        for (Long idFriend : idFriends) {
-            User friend = inMemoryUserStorage.findUserById(Math.toIntExact(idFriend));
-            if (friend != null) {
-                friends.add(friend);
-            }
+        Optional<User> userOptional = userRepository.findById(user.getId());
+        if (userOptional.isPresent()) {
+            log.error("User with id='{}' already exist", user.getId());
+            throw new ExistException("User with login='" + user.getLogin() + "' already exist");
         }
-        return friends;
-    }
 
-    public List<User> findUsersCommonFriends(int id, int friendId) {
-        Set<Long> common = new HashSet<>();
-        User user = inMemoryUserStorage.findUserById(id); //находим пользователей
-        User userFriend = inMemoryUserStorage.findUserById(friendId);
-        Set<Long> idFriends = user.getIdFriends();    //извлекаем из них списки друзей
-        Set<Long> idFriends1 = userFriend.getIdFriends();
-        if (idFriends != null && idFriends1 != null) {
-            //находим общие элементы. общие друзья в обоих списках друзей
-            common = idFriends.stream().filter(idFriends1::contains).collect(Collectors.toSet());
+        if (user.getName() == null || user.getName().isEmpty()) {
+            user.setName(user.getLogin());
         }
-        //теперь следует вернуть сами объекты - общие друзья
-        List<User> commonFriends = new ArrayList<>();
-        for (Long idFriend : common) {
-            User friend = inMemoryUserStorage.findUserById(Math.toIntExact(idFriend));
-            if (friend != null) {
-                commonFriends.add(friend);
-            }
+
+        userRepository.create(user);
+
+        return getUserByLogin(user.getLogin());
+    }
+
+    public User updateUser(User user) {
+        User findedUser = userRepository.findById(user.getId())
+                .orElseThrow(() -> new NoSuchElementException("User with id='" + user.getId() + "' not found"));
+
+        return userRepository.update(user);
+    }
+
+    public List<User> getAllUsers() {
+        return userRepository.findAll();
+    }
+
+    public User getUserById(Integer id) {
+        return userRepository.findById(id)
+                .orElseThrow(() -> new NoSuchElementException("User with id='" + id + "' not found"));
+    }
+
+    public User getUserByLogin(String login) {
+        return userRepository.findByLogin(login)
+                .orElseThrow(() -> new NoSuchElementException("User with login='" + login + "' not found"));
+    }
+
+    public void addFriend(Integer userId, Integer friendId) {
+        userRepository.findById(userId)
+                .orElseThrow(() -> new NoSuchElementException("User with id='" + userId + "' not found"));
+        userRepository.findById(friendId)
+                .orElseThrow(() -> new NoSuchElementException("User with id='" + friendId + "' not found"));
+
+        List<User> friend = friendshipService.getFriend(userId, friendId);
+
+        if (friend.isEmpty()) {
+            friendshipService.addFriend(userId, friendId);
         }
-        return commonFriends;
     }
 
-    public User create(User user) {
-        return inMemoryUserStorage.create(user);
+    public void deleteFriend(Integer userId, Integer friendId) {
+        log.info("Request delete friend");
+        friendshipService.deleteFriendship(userId, friendId);
     }
 
-    public User update(User user) {
-        return inMemoryUserStorage.update(user);
+    public List<User> getFriendsByUserId(Integer userId) {
+        userRepository.findById(userId)
+                .orElseThrow(() -> new NoSuchElementException("User with id='" + userId + "' not found"));
+
+        return friendshipService.getFriendsByUserId(userId);
     }
 
-    public Set<User> addFriend(int id, int friendId) {
-        Set<User> friends = new HashSet<>();     //делаем список пользователей с обновленными друзьями
-        Set<Long> idFriends = new HashSet<>();
-        Set<Long> idFriends1 = new HashSet<>();
-        User user = inMemoryUserStorage.findUserById(id); //находим пользователей
-        User userFriend = inMemoryUserStorage.findUserById(friendId);
-        if (user.getIdFriends() != null) idFriends = user.getIdFriends();    //извлекаем из них списки друзей
-        if (userFriend.getIdFriends() != null) idFriends1 = userFriend.getIdFriends();
-        idFriends.add((long) friendId);                     //добавляем в их списки айди новых друзей
-        idFriends1.add((long) id);
-        user.setIdFriends(idFriends);                 //обновляем списки друзей пользователей
-        userFriend.setIdFriends(idFriends1);
-        friends.add(inMemoryUserStorage.update(user)); //обновляем юзеров в хранилище
-        friends.add(inMemoryUserStorage.update(userFriend));
-        return friends;
+    public List<User> getCommonFriends(Integer id, Integer otherId) {
+        return friendshipService.getCommonFriends(id, otherId);
     }
 
-    public User deleteUser(int id) {
-        return inMemoryUserStorage.deleteUser(id);
-    }
-
-    public User deleteUserFriend(int id, int friendId) {
-        User user = inMemoryUserStorage.findUserById(id); //находим пользователей
-        User userFriend = inMemoryUserStorage.findUserById(friendId); //находим пользователей
-        Set<Long> idFriends = user.getIdFriends();    //извлекаем из них списки друзей
-        Set<Long> idFriendFriends = userFriend.getIdFriends();    //извлекаем из них списки друзей
-        idFriends.remove(friendId); //убираем друга из списка друзей
-        idFriendFriends.remove(id); //убираем друга из списка друзей
-        user.setIdFriends(idFriends);                 //обновляем списки друзей пользователей
-        userFriend.setIdFriends(idFriendFriends);                 //обновляем списки друзей пользователей
-        return inMemoryUserStorage.update(user);
-    }
 }
-
