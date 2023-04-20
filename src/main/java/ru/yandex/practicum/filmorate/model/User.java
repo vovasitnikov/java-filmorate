@@ -9,36 +9,34 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.PastOrPresent;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@FieldDefaults(level= AccessLevel.PRIVATE)
 public class User {
 
     @EqualsAndHashCode.Exclude
     @JsonIgnore
-    private final Set<Integer> friends = new HashSet<>();
+    final Set<Integer> friends = new HashSet<>();
 
     @EqualsAndHashCode.Exclude
-    private Integer id;
+    Integer id;
 
     @NotBlank(message = "Email must be not empty and not null")
     @Email(message = "Email must be format as email address: example@google.com")
-    private String email;
+    String email;
 
     @NotBlank(message = "Login must be not empty and not null")
-    private String login;
+    String login;
 
-    private String name;
+    String name;
 
     @PastOrPresent(message = "Birthday must be in the past, not future")
-    private LocalDate birthday;
+    LocalDate birthday;
 
     public void addFriend(Integer id) {
         friends.add(id);

@@ -26,7 +26,7 @@ public class FilmService {
 
     public Film getFilmById(Long id) {
         return filmStorage.findFilmById(id).orElseThrow(
-                () -> new NoSuchElementException("Film with id='" + id + "' not found"));
+                () -> new NoSuchElementException(String.format("Film with id= %d not found", id)));
     }
 
     public Film createFilm(Film film) {
@@ -35,14 +35,13 @@ public class FilmService {
 
     public Film updateFilm(Film film) {
         filmStorage.findFilmById(film.getId())
-                .orElseThrow(() -> new NoSuchElementException("Film with id='" + film.getId() + "' not found"));
-
+                .orElseThrow(() -> new NoSuchElementException(String.format("Film with id= %d not found", film.getId())));
         return filmStorage.update(film);
     }
 
     public void addLikeByFilmId(Long filmId, Integer userId) {
         filmStorage.findFilmById(filmId)
-                .orElseThrow(() -> new NoSuchElementException("Film with id='" + filmId + "' not found"));
+                .orElseThrow(() -> new NoSuchElementException(String.format("Film with id= %d not found", filmId)));
 
         userService.getUserById(userId);
         filmStorage.addLike(filmId, userId);
@@ -50,7 +49,7 @@ public class FilmService {
 
     public void deleteLikeByFilmId(Long filmId, Integer userId) {
         filmStorage.findFilmById(filmId)
-                .orElseThrow(() -> new NoSuchElementException("Film with id='" + filmId + "' not found"));
+                .orElseThrow(() -> new NoSuchElementException(String.format("Film with id= %d not found", filmId)));
 
         userService.getUserById(userId);
         filmStorage.deleteLike(filmId, userId);

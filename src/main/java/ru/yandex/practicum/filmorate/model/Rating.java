@@ -1,21 +1,20 @@
 package ru.yandex.practicum.filmorate.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
+@FieldDefaults(level= AccessLevel.PRIVATE)
 public class Rating {
 
     @EqualsAndHashCode.Exclude
-    private Integer id;
+    Integer id;
 
     @JsonProperty
-    private String name;
+    String name;
 
 }
